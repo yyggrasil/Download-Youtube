@@ -1,9 +1,10 @@
 from pytube import YouTube
 
 # processo de pegar o link e autentificar para liberear videos bloqueados para contas anônimas
+link = input("Digite o link do video a ser baixado: ")
 video = YouTube(
-    input("Digite o link do video a ser baixado: "),
-    use_oauth=False,
+    link,
+    use_oauth=True,
     allow_oauth_cache=True
 )
 
@@ -11,7 +12,9 @@ video = YouTube(
 print("baixando:", video.title)
 
 # acha a maior resolução do mp4
-stream = video.streams.get_highest_resolution()
+stream = video.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().last()
 
 #download na pasta de videos
-stream.download("/home/yggdrasil/Documents/codigos/gravador/videos")
+stream.download("videos")
+
+print("concluído")
